@@ -3,4 +3,4 @@ from django.http import HttpResponse
 
 # Create your views here.
 def home(request):
-    return HttpResponse('<h1>Member Home</h1>')
+    return HttpResponse('<h1>Member Home - Member App Feature</h1>')
