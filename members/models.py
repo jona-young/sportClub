@@ -30,8 +30,11 @@ class Members(models.Model):
     badmintonRank = models.DecimalField(max_digits=3, decimal_places=2)
     platformRank = models.DecimalField(max_digits=3, decimal_places=2)
 
+    def __str__(self):
+        return '{} {} - {}'.format(self.firstName, self.lastName, self.memberNum)
+
 #TODO
 '''
-Python Django Tutorial Part 5 - Database...8:38 timestamp
-Prepared the migrations, have not pushed migrations to migrate
+Python Django Tutorial Part 6 - User Registration...BEGINNING
+Migrated models, added to admin panel, setup first template view.
 '''
