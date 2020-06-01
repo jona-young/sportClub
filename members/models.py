@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django_countries.fields import CountryField
+from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.dateparse import parse_datetime
 from django.utils import timezone
 from django.urls import reverse
@@ -22,9 +23,9 @@ class Members(models.Model):
     province = models.CharField(max_length=40)
     postalCode = models.CharField(max_length=7)
     country = CountryField()
-    homePhone = models.CharField(max_length=14)
-    cellPhone = models.CharField(max_length=14)
-    workPhone = models.CharField(max_length=14)
+    homePhone = PhoneNumberField()
+    cellPhone = PhoneNumberField()
+    workPhone = PhoneNumberField()
     tennisRank = models.DecimalField(max_digits=3, decimal_places=2)
     squashRank = models.DecimalField(max_digits=3, decimal_places=2)
     badmintonRank = models.DecimalField(max_digits=3, decimal_places=2)
