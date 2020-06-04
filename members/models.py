@@ -2,21 +2,20 @@ from django.db import models
 from django.contrib.auth.models import User
 from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
-from django.utils.dateparse import parse_datetime
-from django.utils import timezone
+import datetime
 from django.urls import reverse
 
 # Create your models here.
 
 class Members(models.Model):
-    memberNum = models.ForeignKey(User, on_delete=models.CASCADE)
+    memberNum = models.OneToOneField(User, on_delete=models.CASCADE)
     memberLink = models.CharField(max_length=20)
     memberLevel = models.CharField(max_length=20)
-    memberBegins = models.DateTimeField()
+    memberBegins = models.DateTimeField(default=datetime.datetime.now())
     firstName = models.CharField(max_length=30)
     lastName = models.CharField(max_length=30)
     gender = models.CharField(max_length=2, choices=[('ML', 'Male'), ('FL', 'Female'), ('OT', 'Other')])
-    birthDate = models.DateField()
+    birthDate = models.DateField(default=datetime.datetime.now())
     emailAddress = models.CharField(max_length=40)
     street = models.CharField(max_length=100)
     city = models.CharField(max_length=40)
@@ -26,16 +25,19 @@ class Members(models.Model):
     homePhone = PhoneNumberField()
     cellPhone = PhoneNumberField()
     workPhone = PhoneNumberField()
-    tennisRank = models.DecimalField(max_digits=3, decimal_places=2)
-    squashRank = models.DecimalField(max_digits=3, decimal_places=2)
-    badmintonRank = models.DecimalField(max_digits=3, decimal_places=2)
-    platformRank = models.DecimalField(max_digits=3, decimal_places=2)
+    tennisRank = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
+    squashRank = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
+    badmintonRank = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
+    platformRank = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
+
 
     def __str__(self):
         return '{} {} - {}'.format(self.firstName, self.lastName, self.memberNum)
 
 #TODO
 '''
-Python Django Tutorial Part 6 - User Registration...BEGINNING
-Migrated models, added to admin panel, setup first template view.
+Python Django Tutorial Part 8 - User Profile and Picture
+'''
+'''
+You have to link the User model user to each Members model per person in order to display that information
 '''

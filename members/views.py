@@ -12,4 +12,7 @@ def home(request):
 
 @login_required
 def profile(request):
-    return render(request, 'members/profile.html')
+    context = {
+        'members': Members.objects.all()
+    }
+    return render(request, 'members/profile.html', context)
