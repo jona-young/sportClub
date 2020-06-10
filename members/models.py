@@ -36,7 +36,9 @@ class Members(models.Model):
 
 #TODO
 '''
-Python Django Tutorial Part 8 - User Profile and Picture
+Python Django Tutorial Part 10 - Create, Update, and Delete Posts
+
+Is this applicable for me?  Court Bookings maybe?
 '''
 '''
 You have to link the User model user to each Members model per person in order to display that information
