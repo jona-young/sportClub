@@ -3,9 +3,6 @@ from django.contrib.auth.models import User
 from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
 import datetime
-from django.urls import reverse
-
-# Create your models here.
 
 class Members(models.Model):
     memberNum = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -42,4 +39,22 @@ Is this applicable for me?  Court Bookings maybe?
 '''
 '''
 You have to link the User model user to each Members model per person in order to display that information
+'''
+
+'''
+How will Create, Update, Delete module affect a sport booking website?
+
+How can you create a booking database that is used both for events and normal court bookings?  Could use a
+form field that identifies if it is an event entry or a court booking entry.  A current issue is booking
+events on the Program Registration Calendar is separate from booking website.  If you register an event
+that requires sport courts, you have to manually block off courts in the court booking side.  Shared 
+names for title on Program Reg Calendar could be called 'Event Title' but Court Booking would default to
+'Court Booking for X Sport'...or what other situations?
+
+How can a court booking form adjust based off which sport you are booking for?  Two form fields one that
+designates a sport..if that sport is chosen, the second form field adjusts to specifically courts that
+are designated for that sport.  One to Many Field? ForeignKey? How do I link that relationship?
+
+First thing is create a basic court booking database and then if needed you can adjust the court booking
+database to include events in a separate git branch.
 '''

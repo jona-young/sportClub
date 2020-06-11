@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'phonenumber_field',
     'django_countries',
+    'bookings.apps.BookingsConfig',
     'members.apps.MembersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
