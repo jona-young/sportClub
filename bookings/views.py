@@ -1,16 +1,12 @@
 from django.shortcuts import render
-from .models import
-
-def tennisBooking(request):
-    context = {
-        #TODO: Filter so that only court bookings with 'Tennis' sport specification are selected
-        #'tennis': courtBooking.objects.all()
-    }
-
-    #Set the template that redirects to the tennis booking page
-    #return render(request, 'bookings/', context)
+from .models import courtBooking
+from django.views.generic import ListView
 
 
+class tennisListView(ListView):
+    model = courtBooking
+    template_name = 'bookings/tennis.html'
+    context_object_name = 'bookings'
 
 #TODO:
 '''
