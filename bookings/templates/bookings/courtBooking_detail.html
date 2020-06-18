@@ -1,0 +1,30 @@
+{% extends "members/base.html" %}
+{% block content %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ object.courtTime }}</a>
+              <small class="text-muted">{{ object.courtDate|date:"F d, Y" }}</small>
+              {% if object.author == user %}
+                <div>
+                  <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'update-tennis' object.id %}">Update</a>
+                  <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'delete-tennis' object.id %}">Delete</a>
+                </div>
+              {% endif %}
+            </div>
+            <h2><a class="article-title" href="#">{{ object.courtPlay }}</a></h2>
+            {% for player in object.player1.all %}
+              <p class="article-content">{{ player }}</p>
+            {% endfor %}
+            {% for player in object.player2.all %}
+              <p class="article-content">{{ player }}</p>
+            {% endfor %}
+            {% for player in object.player3.all %}
+              <p class="article-content">{{ player }}</p>
+            {% endfor %}
+            {% for player in object.player4.all %}
+              <p class="article-content">{{ player }}</p>
+            {% endfor %}
+          </div>
+        </article>
+{% endblock content %}

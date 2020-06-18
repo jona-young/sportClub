@@ -1,12 +1,57 @@
-from django.shortcuts import render
 from .models import courtBooking
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic.edit import ModelFormMixin
 
 
-class tennisListView(ListView):
+class TennisListView(LoginRequiredMixin, ListView):
     model = courtBooking
     template_name = 'bookings/tennis.html'
     context_object_name = 'bookings'
+    ordering = ['-courtDate', 'courtTime']
+
+class TennisDetailView(LoginRequiredMixin, DetailView):
+    model = courtBooking
+
+class TennisCreateView(LoginRequiredMixin, CreateView):
+    model = courtBooking
+    fields = ['courtDate', 'courtTime', 'courtLocation', 'courtNumber', 'courtPlay', 'player1', 'player2',
+          'player3', 'player4', 'comments']
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.sport = 'TN'
+        self.object.author = self.request.user
+        self.object.save()
+        return super(ModelFormMixin, self).form_valid(form)
+
+class TennisUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = courtBooking
+    fields = ['courtDate', 'courtTime', 'courtLocation', 'courtNumber', 'courtPlay', 'player1', 'player2',
+          'player3', 'player4', 'comments']
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.sport = 'TN'
+        self.object.author = self.request.user
+        self.object.save()
+        return super(ModelFormMixin, self).form_valid(form)
+
+    def test_func(self):
+        booking = self.get_object()
+        if self.request.user == booking.author:
+            return True
+        return False
+
+class TennisDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = courtBooking
+    success_url = '/bookings/tennis/'
+
+    def test_func(self):
+        booking = self.get_object()
+        if self.request.user == booking.author:
+            return True
+        return False
 
 #TODO:
 '''

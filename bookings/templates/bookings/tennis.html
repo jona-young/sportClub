@@ -4,7 +4,7 @@
         <article class="media content-section">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" href="#">{{ booking.sport }}</a>
+              <a class="mr-2" href="{% url 'detail-tennis' booking.id %}">{{ booking.sport }}</a>
               <small class="text-muted">{{ booking.courtDate|date:"F d, Y" }}</small>
             </div>
             <h2><a class="article-title" href="#">{{ booking.courtPlay }}</a></h2>

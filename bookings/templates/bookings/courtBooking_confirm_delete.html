@@ -1,0 +1,17 @@
+{% extends "members/base.html" %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Delete Court Booking</legend>
+            </fieldset>
+            <h2>Are you sure you want to delete the post {{ object.sport }} - {{ object.courtDate }} at {{ object.courtTime }}</h2>
+            <div class="form-group">
+                <button class="btn btn-outline-danger" type="submit">Yes, Delete Court Booking</button>
+                <a class="btn btn-outline-secondary" href="{% url 'detail-tennis' object.id %}">Cancel</a>
+
+            </div>
+        </form>
+    </div>
+{% endblock content %}

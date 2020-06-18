@@ -1,6 +1,7 @@
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import User
-import datetime
+from django.urls import reverse
 
 class courtBooking(models.Model):
     sportChoice = [
@@ -10,7 +11,7 @@ class courtBooking(models.Model):
         ('PT', 'Platform Tennis'),
     ]
 
-    courtTime = [
+    cTime = [
         ('5:40 AM', '5:40 AM'),
         ('6:00 AM', '6:00 AM'),
         ('6:20 AM', '6:20 AM'),
@@ -57,8 +58,8 @@ class courtBooking(models.Model):
     ]
 
     sport = models.CharField(max_length=2, choices=sportChoice)
-    courtDate = models.DateField(default=datetime.datetime.now())
-    courtTime = models.CharField(max_length=8, choices=courtTime)
+    courtDate = models.DateField(default=timezone.now)
+    courtTime = models.CharField(max_length=8, choices=cTime)
     courtLocation = models.CharField(max_length=3, choices=[('B&R', 'B&R'), ('UCC', 'UCC')])
     courtNumber = models.CharField(max_length=1, choices=[
         ('1', 'Court 1'),
@@ -69,27 +70,36 @@ class courtBooking(models.Model):
     courtPlay = models.CharField(max_length=2, choices=[('SN', 'Singles'), ('DB', 'Doubles')])
     player1 = models.ManyToManyField(User, related_name='player1')
     player2 = models.ManyToManyField(User, related_name='player2')
-    player3 = models.ManyToManyField(User, related_name='player3', blank=True, null=True)
-    player4 = models.ManyToManyField(User, related_name='player4', blank=True, null=True)
+    player3 = models.ManyToManyField(User, related_name='player3', blank=True)
+    player4 = models.ManyToManyField(User, related_name='player4', blank=True)
     comments = models.TextField(max_length=200)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return "{} {} - {}".format(self.sport, self.courtDate, self.courtTime)
 
+    def get_absolute_url(self):
+        return reverse('detail-tennis', kwargs={'pk': self.pk})
 
     '''
-    Sport - Choices
-    Date - Datetime
-    Time - Time...Choices based off open court times per sport
-    Location - (?) B&R or UCC
-    Court - Based off Sport-specific court numbers
-    Singles/Doubles - Opens 2 Players or 4 Players
-    Player1 - OneToOne relationship?
-    Player2 - OneToOne relationship?
-    Player3 - OneToOne relationship?
-    Player4 - OneToOne relationship?
-    Comments - Text Field
-    Admin Notes - Text Field
     Notification Emails - Y/N that automates sending emails based off any changes
 
     Ideally would like to change court numbers based off sport and location...may be a front-end script
     where if 'value' from element is selected, adjust options for certain other form field.
+
+    TODO - To display data from models as a calendar
+    This may only be good as a Program Registration Calendar and not particularly a Daily Court Booking
+    Schedule
+    
+    https://www.huiwenteo.com/normal/2018/07/24/django-calendar.html
+    https://medium.com/@unionproject88/django-and-python-calendar-e647a8eccff6
+
+
+    TODO - To display Court Booking Schedule in Hourly format
+    
+    TODO - Set limits on hours a court can be booked
+    
+    Provide the choices I have but if I need to refer to it, will have to convert it to a datetimeobject using strptime()
+    
+    
     '''
