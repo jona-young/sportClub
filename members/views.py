@@ -24,10 +24,8 @@ def profile(request):
     else:
         m_form = MemberUpdateForm(instance=request.user.members)
 
-
-
     context = {
-        'm_form': m_form
+        'm_form': m_form,
     }
 
     return render(request, 'members/profile.html', context)

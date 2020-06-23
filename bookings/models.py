@@ -76,7 +76,7 @@ class courtBooking(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return "{} {} - {}".format(self.sport, self.courtDate, self.courtTime)
+        return "{} {} - {}".format(self.player1, self.courtDate, self.courtTime)
 
     def get_absolute_url(self):
         return reverse('detail-tennis', kwargs={'pk': self.pk})

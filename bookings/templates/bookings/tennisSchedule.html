@@ -1,0 +1,56 @@
+{% extends "members/base.html" %}
+{% block content %}
+    <form action="{% url 'schedule-tennis' %}" method="GET">
+        <span><input type="date" name="searchDate" value="{{ searchDate }}"></span>
+        <button class="btn btn-info" value="Search" >Search Date</button>
+    </form>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Court 1</th>
+                <th>Court 2</th>
+                <th>Court 3</th>
+                <th>Court 4</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for key, value in bookingDict.items %}
+                <tr>
+                    <td>{{ key }}</td>
+                    <td>
+                    {% for players in value.1 %}
+                        {% for pl in players %}
+                            {{ pl }}
+                        {% endfor %}
+                    {% endfor %}
+                    </td>
+
+                    <td>
+                    {% for players in value.2 %}
+                        {% for pl in players %}
+                            {{ pl }}
+                        {% endfor %}
+                    {% endfor %}
+                    </td>
+
+                    <td>
+                    {% for players in value.3 %}
+                        {% for pl in players %}
+                            {{ pl }}
+                        {% endfor %}
+                    {% endfor %}
+                    </td>
+
+                    <td>
+                    {% for players in value.4 %}
+                        {% for pl in players %}
+                            {{ pl }}
+                        {% endfor %}
+                    {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}
