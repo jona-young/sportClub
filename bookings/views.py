@@ -1,9 +1,10 @@
 from .models import courtBooking
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic.edit import ModelFormMixin
 from django.contrib.auth.decorators import login_required
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic.edit import ModelFormMixin
 import datetime
 
 
@@ -28,6 +29,7 @@ class TennisCreateView(LoginRequiredMixin, CreateView):
         self.object.sport = 'TN'
         self.object.author = self.request.user
         self.object.save()
+        form.save_m2m()
         return super(ModelFormMixin, self).form_valid(form)
 
 
@@ -41,6 +43,7 @@ class TennisUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         self.object.sport = 'TN'
         self.object.author = self.request.user
         self.object.save()
+        form.save_m2m()
         return super(ModelFormMixin, self).form_valid(form)
 
     def test_func(self):
@@ -63,8 +66,12 @@ class TennisDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 @login_required
 def tennisScheduleView(request):
-    userSearch = request.GET.get('searchDate', '2020-06-17')
-    searchDate = datetime.datetime.strptime(userSearch, '%Y-%m-%d').date()
+    userSearch = request.GET.get('searchDate', datetime.date.today())
+
+    if isinstance(userSearch, str) is True:
+        searchDate = datetime.datetime.strptime(userSearch, '%B %d, %Y').date()
+    else:
+        searchDate = datetime.date.today()
 
     cTime = [
         ('5:40 AM'),
@@ -114,18 +121,16 @@ def tennisScheduleView(request):
     bookingDict = {}
 
     for time in cTime:
-        bookingDict[time] = { '1':'', '2':'', '3':'', '4':'' }
+        bookingDict[time] = { 1:'', 2:'', 3:'', 4:'' }
 
     schedule = courtBooking.objects.filter(courtDate__year=searchDate.year).filter(courtDate__month=searchDate.month).filter(courtDate__day=searchDate.day)
 
     for sc in schedule:
-        bookingDict[sc.courtTime] = {str(sc.courtNumber):[sc.player1.all, sc.player2.all, sc.player3.all, sc.player4.all]}
+        bookingDict[sc.courtTime] = {sc.courtNumber:[sc.player1.all, sc.player2.all, sc.player3.all, sc.player4.all]}
 
     context = {
-        #date does not work
-        'searchDate': userSearch if userSearch else datetime.datetime.today(),
+        'searchDate': userSearch,
         'bookingDict': bookingDict,
-        'schedule': schedule.values()
     }
 
     return render(request, 'bookings/tennisSchedule.html', context)
