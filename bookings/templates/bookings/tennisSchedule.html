@@ -15,11 +15,22 @@
             </tr>
         </thead>
         <tbody>
-            {% for key, value in bookingDict.items %}
+        {% for courtTime, bD in bookingDict.items %}
+            {% for id, courtNum in bD.items %}
+                {{ id }}
                 <tr>
-                    <td>{{ key }}</td>
+                    <td>{{ courtTime }}</td>
                     <td>
-                    {% for players in value.1 %}
+                    {% for players in courtNum.1 %}
+                        {% for pl in players.all %}
+                            {{ pl }}
+                            <br>
+                        {% endfor %}
+                    {% endfor %}
+                    </td>
+
+                    <td>
+                    {% for players in courtNum.2 %}
                         {% for pl in players %}
                             {{ pl }}
                             <br>
@@ -28,7 +39,7 @@
                     </td>
 
                     <td>
-                    {% for players in value.2 %}
+                    {% for players in courtNum.3 %}
                         {% for pl in players %}
                             {{ pl }}
                             <br>
@@ -37,16 +48,7 @@
                     </td>
 
                     <td>
-                    {% for players in value.3 %}
-                        {% for pl in players %}
-                            {{ pl }}
-                            <br>
-                        {% endfor %}
-                    {% endfor %}
-                    </td>
-
-                    <td>
-                    {% for players in value.4 %}
+                    {% for players in courtNum.4 %}
                         {% for pl in players %}
                             {{ pl }}
                             <br>
@@ -55,6 +57,8 @@
                     </td>
                 </tr>
             {% endfor %}
+        {% endfor %}
         </tbody>
     </table>
+{{ bookingDict }}
 {% endblock content %}
