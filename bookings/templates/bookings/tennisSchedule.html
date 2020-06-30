@@ -15,22 +15,23 @@
             </tr>
         </thead>
         <tbody>
-        {% for courtTime, bD in bookingDict.items %}
-            {% for id, courtNum in bD.items %}
-                {{ id }}
+        {% for courtTime, courtPl in bookingDict.items %}
                 <tr>
                     <td>{{ courtTime }}</td>
                     <td>
-                    {% for players in courtNum.1 %}
-                        {% for pl in players.all %}
-                            {{ pl }}
-                            <br>
-                        {% endfor %}
-                    {% endfor %}
+                        <a href="#">
+                            {{ courtPl.1.1 }}
+                            {% for players in courtPl.1.0 %}
+                                {% for pl in players %}
+                                    {{ pl }}
+                                    <br>
+                                {% endfor %}
+                            {% endfor %}
+                        </a>
                     </td>
 
-                    <td>
-                    {% for players in courtNum.2 %}
+                    <td> {{ courtPl.2.1 }}
+                    {% for players in courtPl.2.0 %}
                         {% for pl in players %}
                             {{ pl }}
                             <br>
@@ -38,8 +39,8 @@
                     {% endfor %}
                     </td>
 
-                    <td>
-                    {% for players in courtNum.3 %}
+                    <td> {{ courtPl.3.1 }}
+                    {% for players in courtPl.3.0 %}
                         {% for pl in players %}
                             {{ pl }}
                             <br>
@@ -47,8 +48,8 @@
                     {% endfor %}
                     </td>
 
-                    <td>
-                    {% for players in courtNum.4 %}
+                    <td> {{ courtPl.4.1 }}
+                    {% for players in courtPl.4.0 %}
                         {% for pl in players %}
                             {{ pl }}
                             <br>
@@ -56,9 +57,8 @@
                     {% endfor %}
                     </td>
                 </tr>
-            {% endfor %}
         {% endfor %}
         </tbody>
     </table>
-{{ bookingDict }}
+{{ bookingDict}}
 {% endblock content %}

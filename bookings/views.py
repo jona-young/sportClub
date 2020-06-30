@@ -126,10 +126,8 @@ def tennisScheduleView(request):
     schedule = courtBooking.objects.filter(courtDate__year=searchDate.year).filter(courtDate__month=searchDate.month).filter(courtDate__day=searchDate.day)
 
     for sc in schedule:
-        if sc.courtTime in bookingDict:
-            bookingDict[sc.courtTime].update({str(sc.id):{sc.courtNumber:[sc.player1.all, sc.player2.all, sc.player3.all, sc.player4.all]}})
-        else:
-            bookingDict[sc.courtTime] = {str(sc.id):{sc.courtNumber:[sc.player1.all, sc.player2.all, sc.player3.all, sc.player4.all]}}
+            bookingDict[sc.courtTime].update({sc.courtNumber:[[sc.player1.all, sc.player2.all, sc.player3.all, sc.player4.all], sc.id]})
+
 
     context = {
         'searchDate': userSearch,
@@ -138,16 +136,7 @@ def tennisScheduleView(request):
 
     return render(request, 'bookings/tennisSchedule.html', context)
 
-#TODO: Currently only 1 court can be added to the bookingDict because the dictionary only allows for 1 time slot to be filled
-#TODO: regardless if the bookings are on different courts..better to append to
-
-'''
-dict.upodate() ???
-
-bookingDict[sc.CourtTime] = {{val 1:list of vals},{val2:list of vals}}}
-for k, bD in bookingDict
-
-'''
+#TODO: Add PK values that allow you to link to the anchor tag and click on the booking and be redirected to the update/delete page
 
 #TODO: Set limitations as to players can only play on 1 court at once, x amounts per day, x amounts per week, etc
 
