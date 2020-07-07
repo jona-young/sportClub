@@ -61,7 +61,8 @@
             {% for booking in bookingDict %}
             <tr>
                 <td>{{ booking.courtTime }}</td>
-                <td> {{ booking.id1 }}
+                <td>
+                    {{ booking.id1 }}
                     {% for player in booking.court1 %}
                         {% for pl in player %}
                             {{ pl }}
@@ -70,7 +71,8 @@
                     {% endfor %}
                 </td>
 
-                <td>{{ booking.id2 }}
+                <td>
+                    {{ booking.id2 }}
                     {% for player in booking.court2%}
                         {% for pl in player %}
                             {{ pl }}

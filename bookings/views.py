@@ -118,16 +118,21 @@ def tennisScheduleView(request):
         ('9:30 PM'),
         ('9:40 PM'),
     ]
-    bookingDict = {}
-    bookingList = list()
+    bookingDict = list()
+
+    for time in cTime:
+        tDict = dict()
+        tDict = {
+            'courtTime': time,
+        }
+        bookingDict.append(tDict.copy())
 
     schedule = courtBooking.objects.filter(courtDate__year=searchDate.year).filter(courtDate__month=searchDate.month).filter(courtDate__day=searchDate.day)
-
 
     for sc in schedule:
         #find index if a court time is already added to the booking list
         timeVal = None
-        for i, bookingIter in enumerate(bookingList):
+        for i, bookingIter in enumerate(bookingDict):
             for k,v in bookingIter.items():
                 if sc.courtTime in str(v):
                     timeVal = i
@@ -141,7 +146,7 @@ def tennisScheduleView(request):
                 ('id' + sc.courtNumber): sc.id,
                 ('court' + sc.courtNumber): [sc.player1.all, sc.player2.all, sc.player3.all, sc.player4.all]
             }
-            bookingList[timeVal].update(dictVal)
+            bookingDict[timeVal].update(dictVal)
         elif timeVal is None:
             bDict = dict()
             bDict = {
@@ -149,25 +154,7 @@ def tennisScheduleView(request):
                 'courtTime': sc.courtTime,
                 ('court' + sc.courtNumber): [sc.player1.all, sc.player2.all, sc.player3.all, sc.player4.all]
             }
-            bookingList.append(bDict.copy())
-
-        try:
-            cTime.remove(sc.courtTime)
-        except ValueError:
-            continue
-
-    for time in cTime:
-        tDict = dict()
-        tDict = {
-            'courtTime': time,
-        }
-        bookingList.append(tDict.copy())
-
-    #TODO: Implement a sorting feature to display court times correctly..
-    bookingDict = sorted(bookingList, key = lambda i: i['courtTime'])
-    '''for book in bookingList:
-        if book[courtTime]
-    '''
+            bookingDict.append(bDict.copy())
 
     context = {
         'searchDate': userSearch,
@@ -177,5 +164,7 @@ def tennisScheduleView(request):
     return render(request, 'bookings/tennisSchedule.html', context)
 
 #TODO: Add PK values that allow you to link to the anchor tag and click on the booking and be redirected to the update/delete page
+#TODO: Currently it is not allowed to be a primary key...I think it is a string where I have specified the in the models as a string but in the urls as a <int:pk>
+
 #TODO: Set limitations as to players can only play on 1 court at once, x amounts per day, x amounts per week, etc
 
