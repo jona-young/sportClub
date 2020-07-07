@@ -12,7 +12,7 @@
                 </div>
               {% endif %}
             </div>
-            <h2><a class="article-title" href="#">{{ object.courtPlay }}</a></h2>
+            <h2><a class="article-title" href="#">{{ object.courtPlay }} - {{ object.courtNumber }}</a></h2>
             {% for player in object.player1.all %}
               <p class="article-content">{{ player }}</p>
             {% endfor %}
