@@ -15,93 +15,71 @@
             </tr>
         </thead>
         <tbody>
-<!--        {% for courtTime, courtPl in bookingDict.items %}
-                <tr>
-                    <td>{{ courtTime }}</td>
-                    <td>
-                        <a href="#">
-                            {{ courtPl.1.1 }}
-                            {% for players in courtPl.1.0 %}
-                                {% for pl in players %}
-                                    {{ pl }}
-                                    <br>
-                                {% endfor %}
-                            {% endfor %}
-                        </a>
-                    </td>
-
-                    <td> {{ courtPl.2.1 }}
-                    {% for players in courtPl.2.0 %}
-                        {% for pl in players %}
-                            {{ pl }}
-                            <br>
-                        {% endfor %}
-                    {% endfor %}
-                    </td>
-
-                    <td> {{ courtPl.3.1 }}
-                    {% for players in courtPl.3.0 %}
-                        {% for pl in players %}
-                            {{ pl }}
-                            <br>
-                        {% endfor %}
-                    {% endfor %}
-                    </td>
-
-                    <td> {{ courtPl.4.1 }}
-                    {% for players in courtPl.4.0 %}
-                        {% for pl in players %}
-                            {{ pl }}
-                            <br>
-                        {% endfor %}
-                    {% endfor %}
-                    </td>
-                </tr>
-            {% endfor %} -->
             {% for booking in bookingDict %}
             <tr>
                 <td>{{ booking.courtTime }}</td>
                 <td>
-                    {{ booking.id1 }}
-                    {% for player in booking.court1 %}
-                        {% for pl in player %}
-                            {{ pl }}
-                            <br>
+                    {% if booking.id1 %}
+                    <a href="{% url 'detail-tennis' booking.id1 %}">
+                        {% for player in booking.court1 %}
+                            {% for pl in player %}
+                                {{ pl }}
+                                <br>
+                            {% endfor %}
                         {% endfor %}
-                    {% endfor %}
+                    </a>
+                    {% else %}
+                        <i>Book a Court!</i>
+                    {% endif %}
                 </td>
 
                 <td>
-                    {{ booking.id2 }}
-                    {% for player in booking.court2%}
-                        {% for pl in player %}
-                            {{ pl }}
-                            <br>
+                    {% if booking.id2 %}
+                    <a href="{% url 'detail-tennis' booking.id2 %}">
+                        {% for player in booking.court2 %}
+                            {% for pl in player %}
+                                {{ pl }}
+                                <br>
+                            {% endfor %}
                         {% endfor %}
-                    {% endfor %}
+                    </a>
+                    {% else %}
+                        <i>Book a Court!</i>
+                    {% endif %}
                 </td>
 
-                <td>{{ booking.id3 }}
-                    {% for player in booking.court3 %}
-                        {% for pl in player %}
-                            {{ pl }}
-                            <br>
+                <td>
+                    {% if booking.id3 %}
+                    <a href="{% url 'detail-tennis' booking.id3 %}">
+                        {% for player in booking.court3 %}
+                            {% for pl in player %}
+                                {{ pl }}
+                                <br>
+                            {% endfor %}
                         {% endfor %}
-                    {% endfor %}
+                    </a>
+                    {% else %}
+                        <i>Book a Court!</i>
+                    {% endif %}
                 </td>
 
-                <td>{{ booking.id4 }}
-                    {% for player in booking.court4 %}
-                        {% for pl in player %}
-                            {{ pl }}
-                            <br>
+                <td>
+                    {% if booking.id4 %}
+                    <a href="{% url 'detail-tennis' booking.id4 %}">
+                        {% for player in booking.court4 %}
+                            {% for pl in player %}
+                                {{ pl }}
+                                <br>
+                            {% endfor %}
                         {% endfor %}
-                    {% endfor %}
+                    </a>
+                    {% else %}
+                        <i>Book a Court!</i>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}
 
         </tbody>
     </table>
-{{ bookingDict}}
 {% endblock content %}

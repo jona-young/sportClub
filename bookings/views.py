@@ -2,7 +2,7 @@ from .models import courtBooking
 from django.shortcuts import render
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views.generic.edit import ModelFormMixin
 import datetime
@@ -163,8 +163,18 @@ def tennisScheduleView(request):
 
     return render(request, 'bookings/tennisSchedule.html', context)
 
-#TODO: Add PK values that allow you to link to the anchor tag and click on the booking and be redirected to the update/delete page
-#TODO: Currently it is not allowed to be a primary key...I think it is a string where I have specified the in the models as a string but in the urls as a <int:pk>
-
 #TODO: Set limitations as to players can only play on 1 court at once, x amounts per day, x amounts per week, etc
+'''
+Set permissions in the models...PermisionsMixin...determine if you can setup permissions based on dynamic changes according to
+the number of court bookings a member books for each sport
 
+Set the Class Based View to identify whether the member has a certain permission and to allow or reject permission to access
+a page or feature of the website...
+
+
+------OR------
+
+Assign the check in the test_valid method under class based views...set if statements to also filter the amount of court bookings
+the user has and passes certain condition then the court cannot be booked
+
+'''
