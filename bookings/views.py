@@ -25,6 +25,8 @@ class TennisCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
             self.object = form.save(commit=False)
+            print('yes')
+            print(form.cleaned_data['player1'][0])
             self.object.sport = 'TN'
             self.object.author = self.request.user
             self.object.save()
