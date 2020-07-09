@@ -1,19 +1,18 @@
 from .models import courtBooking
 from django.shortcuts import render
-from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.decorators import login_required
+from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 from django.views.generic.edit import ModelFormMixin
 import datetime
 
-
+'''
 class TennisListView(LoginRequiredMixin, ListView):
     model = courtBooking
     template_name = 'bookings/tennis.html'
     context_object_name = 'bookings'
     ordering = ['-courtDate', 'courtTime']
-
+'''
 
 class TennisDetailView(LoginRequiredMixin, DetailView):
     model = courtBooking
@@ -25,12 +24,13 @@ class TennisCreateView(LoginRequiredMixin, CreateView):
               'player1', 'player2', 'player3', 'player4', 'comments']
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.sport = 'TN'
-        self.object.author = self.request.user
-        self.object.save()
-        form.save_m2m()
-        return super(ModelFormMixin, self).form_valid(form)
+            self.object = form.save(commit=False)
+            self.object.sport = 'TN'
+            self.object.author = self.request.user
+            self.object.save()
+            form.save_m2m()
+            return super(ModelFormMixin, self).form_valid(form)
+
 
 
 class TennisUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -164,17 +164,4 @@ def tennisScheduleView(request):
     return render(request, 'bookings/tennisSchedule.html', context)
 
 #TODO: Set limitations as to players can only play on 1 court at once, x amounts per day, x amounts per week, etc
-'''
-Set permissions in the models...PermisionsMixin...determine if you can setup permissions based on dynamic changes according to
-the number of court bookings a member books for each sport
-
-Set the Class Based View to identify whether the member has a certain permission and to allow or reject permission to access
-a page or feature of the website...
-
-
-------OR------
-
-Assign the check in the test_valid method under class based views...set if statements to also filter the amount of court bookings
-the user has and passes certain condition then the court cannot be booked
-
-'''
+#TODO: Pass information from template to a form to be prefilled based off court booking court and date and time
