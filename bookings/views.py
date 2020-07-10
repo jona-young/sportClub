@@ -1,7 +1,6 @@
 from .models import courtBooking
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.contrib import messages
-from django.forms.models import model_to_dict
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
@@ -18,8 +17,9 @@ class TennisCreateView(LoginRequiredMixin, CreateView):
               'player1', 'player2', 'player3', 'player4', 'comments']
 
     def form_valid(self, form):
-        memberCheck = courtBooking.objects.filter(courtDate__range=[datetime.date.today().strftime('%Y-%m-%d'), (
-                datetime.date.today() + datetime.timedelta(days=21)).strftime('%Y-%m-%d')])
+        memberCheck = courtBooking.objects.filter(
+            courtDate__range=[datetime.date.today().strftime('%Y-%m-%d'),
+                              (datetime.date.today() + datetime.timedelta(days=21)).strftime('%Y-%m-%d')])
 
         playerDict = dict()
         for iter in memberCheck:
@@ -48,11 +48,15 @@ class TennisCreateView(LoginRequiredMixin, CreateView):
                     playerDict[player] = 1
         print('PlayerDict' + str(playerDict))
         print('PRE IF-STATEMENTS - ' + str(form.cleaned_data['player1'].all()[0]))
+        print(playerDict[form.cleaned_data['player1'].all()[0]])
+
         try:
             if playerDict[form.cleaned_data['player1'].all()[0]] >= 3:
-                print(playerDict[form.cleaned_data['player1'].all()[0]])
                 # TODO:CREATE ERROR MESSAGE TO DISPLAY ON PAGE
+                messages.warning(self.request,
+                                 '{} has the maximum number of court bookings (3)'.format(form.cleaned_data['player1'].all()[0]))
                 return super(TennisCreateView, self).form_invalid(form)
+
             else:
                 self.object = form.save(commit=False)
                 self.object.sport = 'TN'
@@ -163,7 +167,8 @@ def tennisScheduleView(request):
         }
         bookingDict.append(tDict.copy())
 
-    schedule = courtBooking.objects.filter(courtDate__year=searchDate.year).filter(courtDate__month=searchDate.month).filter(courtDate__day=searchDate.day)
+    schedule = courtBooking.objects.filter(courtDate__year=searchDate.year).filter(
+        courtDate__month=searchDate.month).filter(courtDate__day=searchDate.day)
 
     for sc in schedule:
         #find index if a court time is already added to the booking list
