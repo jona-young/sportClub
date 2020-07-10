@@ -1,6 +1,7 @@
 from .models import courtBooking
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.forms.models import model_to_dict
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
@@ -17,15 +18,55 @@ class TennisCreateView(LoginRequiredMixin, CreateView):
               'player1', 'player2', 'player3', 'player4', 'comments']
 
     def form_valid(self, form):
+        memberCheck = courtBooking.objects.filter(courtDate__range=[datetime.date.today().strftime('%Y-%m-%d'), (
+                datetime.date.today() + datetime.timedelta(days=21)).strftime('%Y-%m-%d')])
+
+        playerDict = dict()
+        for iter in memberCheck:
+            for player in iter.player1.all():
+                if player in playerDict:
+                    playerDict[player] += 1
+                else:
+                    playerDict[player] = 1
+
+            for player in iter.player2.all():
+                if player in playerDict:
+                    playerDict[player] += 1
+                else:
+                    playerDict[player] = 1
+
+            for player in iter.player3.all():
+                if player in playerDict:
+                    playerDict[player] += 1
+                else:
+                    playerDict[player] = 1
+
+            for player in iter.player4.all():
+                if player in playerDict:
+                    playerDict[player] += 1
+                else:
+                    playerDict[player] = 1
+        print('PlayerDict' + str(playerDict))
+        print('PRE IF-STATEMENTS - ' + str(form.cleaned_data['player1'].all()[0]))
+        try:
+            if playerDict[form.cleaned_data['player1'].all()[0]] >= 3:
+                print(playerDict[form.cleaned_data['player1'].all()[0]])
+                # TODO:CREATE ERROR MESSAGE TO DISPLAY ON PAGE
+                return super(TennisCreateView, self).form_invalid(form)
+            else:
+                self.object = form.save(commit=False)
+                self.object.sport = 'TN'
+                self.object.author = self.request.user
+                self.object.save()
+                form.save_m2m()
+                return super(ModelFormMixin, self).form_valid(form)
+        except:
             self.object = form.save(commit=False)
-            print('yes')
-            print(form.cleaned_data['player1'][0])
             self.object.sport = 'TN'
             self.object.author = self.request.user
             self.object.save()
             form.save_m2m()
             return super(ModelFormMixin, self).form_valid(form)
-
 
 
 class TennisUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -158,50 +199,4 @@ def tennisScheduleView(request):
 
     return render(request, 'bookings/tennisSchedule.html', context)
 
-#TODO: Set limitations as to players can only play on 1 court at once, x amounts per day, x amounts per week, etc
-
-'''
-        memberCheck = courtBooking.objects.filter(courtDate__range=[datetime.date.today().strftime('%Y-%m-%d'), (
-                datetime.date.today() + datetime.timedelta(days=21)).strftime('%Y-%m-%d')])
-
-        playerDict = dict()
-        for iter in memberCheck:
-            for player in iter.player1.all():
-                if player in playerDict:
-                    playerDict[player] += 1
-                else:
-                    playerDict[player] = 1
-
-            for player in iter.player2.all():
-                if player in playerDict:
-                    playerDict[player] += 1
-                else:
-                    playerDict[player] = 1
-
-            for player in iter.player3.all():
-                if player in playerDict:
-                    playerDict[player] += 1
-                else:
-                    playerDict[player] = 1
-
-            for player in iter.player4.all():
-                if player in playerDict:
-                    playerDict[player] += 1
-                else:
-                    playerDict[player] = 1
-        print('PRE IF-STATEMENTS - ' + form.cleaned_data['player1'][0])
-
-        if playerDict[str(form.cleaned_data['player1'][0])] >= 3:
-            # TODO:REDIRECT TO FORM PAGE with ELSE statement
-            messages.error(self.request, 'You currently have 3 or more bookings!  You are at full capacity bookings!')
-            redirect('create-tennis')
-        # TODO:IF PLAYERS BEING ENTERED TO THE COURT DO NOT HAVE MORE THAN 3 BOOKINGS IN PLAYERDICT THEN IT CAN SAVE FORM
-        else:
-            self.object = form.save(commit=False)
-            self.object.sport = 'TN'
-            self.object.author = self.request.user
-            self.object.save()
-            form.save_m2m()
-            return super(ModelFormMixin, self).form_valid(form)
-'''
 #TODO: Pass information from template to a form to be prefilled based off court booking court and date and time
