@@ -1,18 +1,11 @@
 from .models import courtBooking
 from django.shortcuts import render
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 from django.views.generic.edit import ModelFormMixin
 import datetime
-
-'''
-class TennisListView(LoginRequiredMixin, ListView):
-    model = courtBooking
-    template_name = 'bookings/tennis.html'
-    context_object_name = 'bookings'
-    ordering = ['-courtDate', 'courtTime']
-'''
 
 class TennisDetailView(LoginRequiredMixin, DetailView):
     model = courtBooking
@@ -166,4 +159,49 @@ def tennisScheduleView(request):
     return render(request, 'bookings/tennisSchedule.html', context)
 
 #TODO: Set limitations as to players can only play on 1 court at once, x amounts per day, x amounts per week, etc
+
+'''
+        memberCheck = courtBooking.objects.filter(courtDate__range=[datetime.date.today().strftime('%Y-%m-%d'), (
+                datetime.date.today() + datetime.timedelta(days=21)).strftime('%Y-%m-%d')])
+
+        playerDict = dict()
+        for iter in memberCheck:
+            for player in iter.player1.all():
+                if player in playerDict:
+                    playerDict[player] += 1
+                else:
+                    playerDict[player] = 1
+
+            for player in iter.player2.all():
+                if player in playerDict:
+                    playerDict[player] += 1
+                else:
+                    playerDict[player] = 1
+
+            for player in iter.player3.all():
+                if player in playerDict:
+                    playerDict[player] += 1
+                else:
+                    playerDict[player] = 1
+
+            for player in iter.player4.all():
+                if player in playerDict:
+                    playerDict[player] += 1
+                else:
+                    playerDict[player] = 1
+        print('PRE IF-STATEMENTS - ' + form.cleaned_data['player1'][0])
+
+        if playerDict[str(form.cleaned_data['player1'][0])] >= 3:
+            # TODO:REDIRECT TO FORM PAGE with ELSE statement
+            messages.error(self.request, 'You currently have 3 or more bookings!  You are at full capacity bookings!')
+            redirect('create-tennis')
+        # TODO:IF PLAYERS BEING ENTERED TO THE COURT DO NOT HAVE MORE THAN 3 BOOKINGS IN PLAYERDICT THEN IT CAN SAVE FORM
+        else:
+            self.object = form.save(commit=False)
+            self.object.sport = 'TN'
+            self.object.author = self.request.user
+            self.object.save()
+            form.save_m2m()
+            return super(ModelFormMixin, self).form_valid(form)
+'''
 #TODO: Pass information from template to a form to be prefilled based off court booking court and date and time

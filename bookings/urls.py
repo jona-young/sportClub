@@ -3,7 +3,6 @@ from .views import TennisDetailView, TennisCreateView, TennisUpdateView, TennisD
 from . import views
 
 urlpatterns = [
-    #path('tennis/', TennisListView.as_view(), name='booking-tennis'),
     path('tennis/<int:pk>/', TennisDetailView.as_view(), name='detail-tennis'),
     path('tennis/<int:pk>/update', TennisUpdateView.as_view(), name='update-tennis'),
     path('tennis/<int:pk>/delete', TennisDeleteView.as_view(), name='delete-tennis'),
