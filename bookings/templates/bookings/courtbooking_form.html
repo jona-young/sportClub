@@ -5,13 +5,14 @@
         <form method="POST">
             {% csrf_token %}
             <fieldset class="form-group">
-                <div class="alert alert-danger" role="alert">
                 {% if messages %}
-                    {% for message in messages %}
-                    {{ message }}
-                    {% endfor %}
+                    <div class="alert alert-danger" role="alert">
+                        {% for message in messages %}
+                        {{ message }}<br>
+                        {% endfor %}
+                    </div>
                 {% endif %}
-                </div>
+
                 <legend class="border-bottom mb-4">Court Booking</legend>
                 {{ form|crispy }}
             </fieldset>

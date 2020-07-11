@@ -16,6 +16,15 @@ class TennisCreateView(LoginRequiredMixin, CreateView):
     fields = ['courtDate', 'courtTime', 'courtLocation', 'courtNumber', 'courtPlay',
               'player1', 'player2', 'player3', 'player4', 'comments']
 
+    def get_form_kwargs(self, **kwargs):
+        context = super(TennisCreateView, self).get_form_kwargs()
+        context['initial']['courtDate'] = self.kwargs['courtD']
+        context['initial']['courtTime'] = self.kwargs['courtT']
+        context['initial']['courtNumber'] = self.kwargs['courtN']
+
+        print(context)
+        return context
+
     def form_valid(self, form):
         memberCheck = courtBooking.objects.filter(
             courtDate__range=[datetime.date.today().strftime('%Y-%m-%d'),
@@ -48,15 +57,34 @@ class TennisCreateView(LoginRequiredMixin, CreateView):
                     playerDict[player] = 1
         print('PlayerDict' + str(playerDict))
         print('PRE IF-STATEMENTS - ' + str(form.cleaned_data['player1'].all()[0]))
-        print(playerDict[form.cleaned_data['player1'].all()[0]])
 
         try:
+            counter = 0
+            messageList = list()
             if playerDict[form.cleaned_data['player1'].all()[0]] >= 3:
-                # TODO:CREATE ERROR MESSAGE TO DISPLAY ON PAGE
-                messages.warning(self.request,
+                mess1 = messages.warning(self.request,
                                  '{} has the maximum number of court bookings (3)'.format(form.cleaned_data['player1'].all()[0]))
-                return super(TennisCreateView, self).form_invalid(form)
+                messageList.append(mess1)
+                counter += 1
+            if playerDict[form.cleaned_data['player2'].all()[0]] >= 3:
+                mess2 = messages.warning(self.request,
+                                 '{} has the maximum number of court bookings (3)'.format(form.cleaned_data['player2'].all()[0]))
+                messageList.append(mess2)
+                counter += 1
+            if playerDict[form.cleaned_data['player3'].all()[0]] >= 3:
+                mess3 = messages.warning(self.request,
+                                 '{} has the maximum number of court bookings (3)'.format(form.cleaned_data['player3'].all()[0]))
+                messageList.append(mess3)
+                counter += 1
+            if playerDict[form.cleaned_data['player4'].all()[0]] >= 3:
+                mess4 = messages.warning(self.request,
+                                 '{} has the maximum number of court bookings (3)'.format(form.cleaned_data['player4'].all()[0]))
+                messageList.append(mess4)
+                counter += 1
 
+            if counter > 0:
+                print('Number of players overbooked -', counter)
+                return super(TennisCreateView, self).form_invalid(form)
             else:
                 self.object = form.save(commit=False)
                 self.object.sport = 'TN'
@@ -113,57 +141,16 @@ def tennisScheduleView(request):
     else:
         searchDate = datetime.date.today()
 
-    cTime = [
-        ('5:40 AM'),
-        ('6:00 AM'),
-        ('6:20 AM'),
-        ('7:00 AM'),
-        ('7:40 AM'),
-        ('8:00 AM'),
-        ('8:20 AM'),
-        ('9:00 AM'),
-        ('9:40 AM'),
-        ('10:00 AM'),
-        ('10:20 AM'),
-        ('11:00 AM'),
-        ('11:40 AM'),
-        ('12:00 PM'),
-        ('12:15 PM'),
-        ('12:20 PM'),
-        ('1:00 PM'),
-        ('1:15 PM'),
-        ('1:40 PM'),
-        ('2:00 PM'),
-        ('2:15 PM'),
-        ('2:20 PM'),
-        ('3:00 PM'),
-        ('3:30 PM'),
-        ('3:40 PM'),
-        ('4:00 PM'),
-        ('4:20 PM'),
-        ('4:30 PM'),
-        ('5:00 PM'),
-        ('5:30 PM'),
-        ('5:40 PM'),
-        ('6:00 PM'),
-        ('6:20 PM'),
-        ('6:30 PM'),
-        ('7:00 PM'),
-        ('7:30 PM'),
-        ('7:40 PM'),
-        ('8:00 PM'),
-        ('8:20 PM'),
-        ('8:30 PM'),
-        ('9:00 PM'),
-        ('9:30 PM'),
-        ('9:40 PM'),
-    ]
+    xTime = list()
+    for iter in courtBooking.cTime:
+        xTime.append(iter[0])
     bookingDict = list()
 
-    for time in cTime:
+    for time in xTime:
         tDict = dict()
         tDict = {
             'courtTime': time,
+            'courtDate': searchDate.strftime('%Y-%m-%d')
         }
         bookingDict.append(tDict.copy())
 
@@ -189,13 +176,7 @@ def tennisScheduleView(request):
             }
             bookingDict[timeVal].update(dictVal)
         elif timeVal is None:
-            bDict = dict()
-            bDict = {
-                ('id' + sc.courtNumber): sc.id,
-                'courtTime': sc.courtTime,
-                ('court' + sc.courtNumber): [sc.player1.all, sc.player2.all, sc.player3.all, sc.player4.all]
-            }
-            bookingDict.append(bDict.copy())
+            print('ERROR: The court time in the models.py does not match any court time in this views cTime variable')
 
     context = {
         'searchDate': userSearch,
@@ -204,4 +185,8 @@ def tennisScheduleView(request):
 
     return render(request, 'bookings/tennisSchedule.html', context)
 
-#TODO: Pass information from template to a form to be prefilled based off court booking court and date and time
+#TODO: Clarify if current booking system is 3 bookings total or over X period of days?..currently players stopped
+#TODO: for courts ahead of 21 day limitation because check only counts within 21 days
+
+#TODO: Make it so each member can only fill one of player1,player2, player3, player4
+#TODO: Move overbooking check system to a utils.py file

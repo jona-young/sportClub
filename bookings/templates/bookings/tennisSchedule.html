@@ -29,7 +29,7 @@
                         {% endfor %}
                     </a>
                     {% else %}
-                        <a href="{% url 'create-tennis' %}">
+                        <a href="{% url 'create-tennis' courtD=booking.courtDate courtT=booking.courtTime courtN=1 %}">
                             <i>Book a Court!</i>
                         </a>
                     {% endif %}
@@ -46,7 +46,7 @@
                         {% endfor %}
                     </a>
                     {% else %}
-                        <a href="{% url 'create-tennis' %}">
+                        <a href="{% url 'create-tennis' courtD=booking.courtDate courtT=booking.courtTime courtN=2 %}">
                             <i>Book a Court!</i>
                         </a>
                     {% endif %}
@@ -63,7 +63,7 @@
                         {% endfor %}
                     </a>
                     {% else %}
-                        <a href="{% url 'create-tennis' %}">
+                        <a href="{% url 'create-tennis' courtD=booking.courtDate courtT=booking.courtTime courtN=3 %}">
                             <i>Book a Court!</i>
                         </a>
                     {% endif %}
@@ -80,14 +80,13 @@
                         {% endfor %}
                     </a>
                     {% else %}
-                        <a href="{% url 'create-tennis' %}">
+                        <a href="{% url 'create-tennis' courtD=booking.courtDate courtT=booking.courtTime courtN=4 %}">
                             <i>Book a Court!</i>
                         </a>
                     {% endif %}
                 </td>
             </tr>
             {% endfor %}
-
         </tbody>
     </table>
 {% endblock content %}
