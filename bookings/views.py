@@ -61,27 +61,42 @@ class TennisCreateView(LoginRequiredMixin, CreateView):
         try:
             counter = 0
             messageList = list()
-            if playerDict[form.cleaned_data['player1'].all()[0]] >= 3:
-                mess1 = messages.warning(self.request,
-                                 '{} has the maximum number of court bookings (3)'.format(form.cleaned_data['player1'].all()[0]))
-                messageList.append(mess1)
-                counter += 1
-            if playerDict[form.cleaned_data['player2'].all()[0]] >= 3:
-                mess2 = messages.warning(self.request,
-                                 '{} has the maximum number of court bookings (3)'.format(form.cleaned_data['player2'].all()[0]))
-                messageList.append(mess2)
-                counter += 1
-            if playerDict[form.cleaned_data['player3'].all()[0]] >= 3:
-                mess3 = messages.warning(self.request,
-                                 '{} has the maximum number of court bookings (3)'.format(form.cleaned_data['player3'].all()[0]))
-                messageList.append(mess3)
-                counter += 1
-            if playerDict[form.cleaned_data['player4'].all()[0]] >= 3:
-                mess4 = messages.warning(self.request,
-                                 '{} has the maximum number of court bookings (3)'.format(form.cleaned_data['player4'].all()[0]))
-                messageList.append(mess4)
-                counter += 1
+            try:
+                if playerDict[form.cleaned_data['player1'].all()[0]] >= 3:
+                    mess1 = messages.warning(self.request,
+                                     '{} has the maximum number of court bookings (3)'.format(form.cleaned_data['player1'].all()[0]))
+                    messageList.append(mess1)
+                    counter += 1
+            except:
+                print('Player 1 Error')
 
+            try:
+                if playerDict[form.cleaned_data['player2'].all()[0]] >= 3:
+                    mess2 = messages.warning(self.request,
+                                     '{} has the maximum number of court bookings (3)'.format(form.cleaned_data['player2'].all()[0]))
+                    messageList.append(mess2)
+                    counter += 1
+            except:
+                print('Player 2 Error')
+
+            try:
+                if playerDict[form.cleaned_data['player3'].all()[0]] >= 3:
+                    mess3 = messages.warning(self.request,
+                                     '{} has the maximum number of court bookings (3)'.format(form.cleaned_data['player3'].all()[0]))
+                    messageList.append(mess3)
+                    counter += 1
+            except:
+                print('Player 3 Error')
+            try:
+                if playerDict[form.cleaned_data['player4'].all()[0]] >= 3:
+                    mess4 = messages.warning(self.request,
+                                     '{} has the maximum number of court bookings (3)'.format(form.cleaned_data['player4'].all()[0]))
+                    messageList.append(mess4)
+                    counter += 1
+            except:
+                print('Player 4 Error')
+
+            print('Counter check - ', counter)
             if counter > 0:
                 print('Number of players overbooked -', counter)
                 return super(TennisCreateView, self).form_invalid(form)
@@ -93,6 +108,7 @@ class TennisCreateView(LoginRequiredMixin, CreateView):
                 form.save_m2m()
                 return super(ModelFormMixin, self).form_valid(form)
         except:
+            print('Error, skips check')
             self.object = form.save(commit=False)
             self.object.sport = 'TN'
             self.object.author = self.request.user
@@ -189,4 +205,13 @@ def tennisScheduleView(request):
 #TODO: for courts ahead of 21 day limitation because check only counts within 21 days
 
 #TODO: Make it so each member can only fill one of player1,player2, player3, player4
-#TODO: Move overbooking check system to a utils.py file
+
+#TODO: Move overbooking check system to a utils py file
+
+#TODO: ALSO, make warning messages for Singles/Doubles and amount of player1/2/3/4 chosen
+
+#TODO: Display list of bookings in the member profile or a member-specific page
+
+#TODO: Copy the CreateView overbookings checks to updateview
+
+#TODO: Set admin priviliges to override overbookings
