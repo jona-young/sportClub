@@ -201,12 +201,7 @@ def tennisScheduleView(request):
 
     return render(request, 'bookings/tennisSchedule.html', context)
 
-#TODO: Clarify if current booking system is 3 bookings total or over X period of days?..currently players stopped
-#TODO: for courts ahead of 21 day limitation because check only counts within 21 days
-
 #TODO: Make it so each member can only fill one of player1,player2, player3, player4
-
-#TODO: Move overbooking check system to a utils py file
 
 #TODO: ALSO, make warning messages for Singles/Doubles and amount of player1/2/3/4 chosen
 
